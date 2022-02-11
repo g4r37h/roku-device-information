@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="AppScene" extends="Scene">
+
+    <children>
+        <LayoutGroup id="layoutGroup" translation="[40, 40]" layoutDirection="vert" horizAlignment="left" itemSpacings="[20]" >
+            <Label id="title" color="0xffffffff" width="1200" font="font:MediumBoldSystemFont" text="Roku Device Information" />
+            <Rectangle id="textGroup" width="1200" height="600" color="0x101010C0">
+                <ScrollableText id="body" width="1160" height="560" translation="[ 20, 20 ]" font="font:SmallBoldSystemFont" horizAlign="left" vertAlign="top" />
+            </Rectangle>
+        </LayoutGroup>
+
+        <Timer id="updateTimer" repeat="true" duration="5" />
+    </children>
+
+    <script type="text/brightscript" uri="./AppScene.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/DeviceInformation.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/TypeHelper.brs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/ValueHelper.brs" />
+</component>
