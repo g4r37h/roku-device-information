@@ -13,7 +13,14 @@ function DeviceInformation() as object
         end function
 
         getConnectionInfo: function() as object
-            return m._deviceInfo.getConnectionInfo()
+            lanConnection = m._deviceInfo.getConnectionInfo()
+            lanConnection.type = getValue(lanConnection.type, "Unknown").replace("Connection", "")
+            return {
+                lan: lanConnection
+                wan: {
+                    ip: m._deviceInfo.getExternalIp()
+                }
+            }
         end function
 
         getCountryCode: function() as string

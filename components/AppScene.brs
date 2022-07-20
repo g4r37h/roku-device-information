@@ -41,10 +41,12 @@ sub updateBody()
 
     if m.deviceInformation.hasNetworkConnection()
         connectionInfo = m.deviceInformation.getConnectionInfo()
-        connectionType = getValue(connectionInfo.type, "Unknown")
-        m.body.text += _addField("Network Connection Type", connectionType.replace("Connection", ""))
-        m.body.text += _addField("IP Address", connectionInfo.ip)
-        if connectionType = "WiFiConnection" then m.body.text += _addField("SSID", connectionInfo.ssid)
+        m.body.text += _addField("Network Connection Type", connectionInfo.lan.type + (function(lan as object) as string
+            if lan.type = "WiFi" then return " (" + lan.ssid + ")"
+            return ""
+        end function)(connectionInfo.lan))
+        m.body.text += _addField("Internal IP Address", connectionInfo.lan.ip)
+        m.body.text += _addField("External IP Address", connectionInfo.wan.ip)
     else
         m.body.text += _addField("Network Connection Type", "Not Connected")
     end if
