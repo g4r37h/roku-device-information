@@ -1,8 +1,8 @@
-sub Main(args as dynamic)
-    initialiseApp(args)
+sub main(args as dynamic) 'bs:disable-line
+    initialiseApp()
 
     while true
-        msg = wait(0, m._messagePort)
+        msg = wait(0, m.port)
         msgType = type(msg)
 
         if msgType <> "roInvalid"
@@ -13,9 +13,9 @@ sub Main(args as dynamic)
     end while
 end sub
 
-sub initialiseApp(args as object)
-    m.screen = CreateObject("roSGScreen")
-    m.port = CreateObject("roMessagePort")
+sub initialiseApp()
+    m.screen = createObject("roSGScreen")
+    m.port = createObject("roMessagePort")
     m.screen.setMessagePort(m.port)
     m.scene = m.screen.CreateScene("AppScene")
 

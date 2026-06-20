@@ -1,0 +1,62 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+import "pkg:/source/utils/AppUtils.bs"
+
+namespace Util.ConfigModel
+
+    function getInstance() as object
+        return (m.configModel ?? Util.App.getGlobal()?.configModel)
+    end function
+
+    function get(path as string, default = invalid as dynamic) as dynamic
+        return (_getValue(path) ?? default)
+    end function
+
+    function getArray(path as string, default = invalid as object) as object
+        value = _getValue(path)
+        return (isArray(value) ? value : (isArray(default) ? default : []))
+    end function
+
+    function getBoolean(path as string, default = false as boolean) as boolean
+        value = _getValue(path)
+        return (isBoolean(value) ? value : default)
+    end function
+
+    function getFloat(path as string, default = -1.0 as float) as float
+        value = _getValue(path)
+        return (isFloat(value) ? value : default)
+    end function
+
+    function getInteger(path as string, default = -1 as integer) as integer
+        value = _getValue(path)
+        return (isInteger(value) ? value : default)
+    end function
+
+    function getObject(path as string, default = invalid as object) as object
+        value = _getValue(path)
+        return (isObject(value) ? value : (isObject(default) ? default : {}))
+    end function
+
+    function getString(path as string, default = "" as string) as string
+        value = _getValue(path)
+        return (isString(value) ? value : default)
+    end function
+
+    function getFeatureConfig(name as string) as object
+        config = _getValue("feature." + name)
+        if not isObject(config) then return { "enabled": false }
+
+        if not isBoolean(config.enabled) then config.enabled = false
+        return config
+    end function
+
+    function getFeatureEnabled(name as string) as boolean
+        return (getFeatureConfig(name)?.enabled ?? false)
+    end function
+
+    function _getValue(path as string) as dynamic
+        instance = getInstance()
+        return (instance <> invalid ? instance@.get(path) : invalid)
+    end function
+
+end namespace

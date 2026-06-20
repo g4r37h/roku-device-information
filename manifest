@@ -1,9 +1,44 @@
-# Channel Details
-title=Roku Device Information
-major_version=0
-minor_version=0
-build_version=1
+title=
 
-# Config
-ui_resolutions=hd
-rsg_version=1.2
+major_version=
+minor_version=
+build_version=
+build_repo_hash=
+
+mm_icon_focus_fhd=pkg:/assets/1080/fixed/app/images/system/icon.jpg
+mm_icon_focus_hd=pkg:/assets/720/fixed/app/images/system/icon.jpg
+splash_screen_fhd=pkg:/assets/1080/fixed/app/images/system/splash.jpg
+splash_screen_hd=pkg:/assets/720/fixed/app/images/system/splash.jpg
+splash_min_time=0
+supports_input_launch=1
+ui_resolutions=fhd
+uri_resolution_autosub=$$RES$$,480,720,1080
+
+bs_const=
+bs_libs_required=
+default_locale=en_us
+
+ads_enabled=
+ads_logging_enabled=
+ads_test_mode_enabled=
+analytics_enabled=
+analytics_ga4_measurement_id=
+analytics_logging_enabled=
+analytics_rudderstack_data_plane_url=
+analytics_rudderstack_write_key=
+analytics_sentry_dsn=
+app_debug_banner_enabled=
+app_logging_enabled=
+app_logging_overlay_startup_enabled=
+environment=
+network_logging_enabled=
+override_is_low_memory_hardware=
+override_locale=
+override_supports_opengl=
+proxy_ip=
+proxy_port=
+rale_enabled=
+sd_resolution_support_enabled=false
+
+debug_account_password=
+debug_account_username=

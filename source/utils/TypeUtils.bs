@@ -1,0 +1,68 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+function isArray(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roArray" or valueType = "Array"
+end function
+
+function isBoolean(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roBoolean" or valueType = "Boolean"
+end function
+
+function isFloat32(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roFloat" or valueType = "Float"
+end function
+
+function isFloat64(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roDouble" or valueType = "Double"
+end function
+
+function isFloat(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roFloat" or valueType = "Float" or valueType = "roDouble" or valueType = "Double"
+end function
+
+function isInitialised(value as dynamic) as boolean
+    return type(value) <> "<uninitialized>"
+end function
+
+function isInteger32(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roInteger" or valueType = "Integer" or valueType = "roInt"
+end function
+
+function isInteger64(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roLongInteger" or valueType = "LongInteger"
+end function
+
+function isInteger(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roInteger" or valueType = "Integer" or valueType = "roInt" or valueType = "roLongInteger" or valueType = "LongInteger"
+end function
+
+function isIpAddress(value as dynamic) as boolean
+    if not isString(value) then return false
+    return createObject("roRegex", "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$", "").isMatch(value)
+end function
+
+function isNumber(value as dynamic) as boolean
+    return isInteger(value) or isFloat(value)
+end function
+
+function isObject(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "Object" or valueType = "roAssociativeArray"
+end function
+
+function isString(value as dynamic) as boolean
+    valueType = type(value)
+    return valueType = "roString" or valueType = "String"
+end function
+
+function isValid(value as dynamic) as boolean
+    return isInitialised(value) and value <> invalid
+end function

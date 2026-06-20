@@ -2,9 +2,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build",
+            "label": "Build Production",
             "type": "shell",
-            "command": "./scripts/vscBuild/build.sh",
+            "command": "./scripts/vscode/buildProd.sh",
             "presentation": {
                 "reveal": "silent",
                 "panel": "shared"

@@ -1,0 +1,32 @@
+{
+    "rules": {
+        "inline-if-style": "then",
+        "block-if-style": "no-then",
+        "condition-style": "off",
+        "named-function-style": "auto",
+        "anon-function-style": "auto",
+        "aa-comma-style": "never",
+        "no-print": "info",
+        "no-todo": "info",
+        "todo-pattern": "TODO|todo|FIXME",
+        "no-stop": "error",
+        "eol-last": "off",
+        "type-annotations": "all",
+        "color-format": "off",
+        "color-case": "off",
+        "color-alpha": "off",
+        "color-alpha-defaults": "off",
+        "color-cert": "off",
+        "assign-all-paths": "off",
+        "unsafe-path-loop": "off",
+        "unsafe-iterators": "error",
+        "unreachable-code": "error",
+        "case-sensitivity": "error",
+        "unused-variable": "error",
+        "consistent-return": "error"
+    },
+    "ignores": [
+        "components/common/views/videoPlayerView/player/ssai/AEMTTask.brs",
+        "components/bs-core-components/focus/FocusInterface.bs"
+    ]
+}

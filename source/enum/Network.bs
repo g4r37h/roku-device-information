@@ -1,0 +1,11 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+namespace Network
+
+    enum Adapter
+        ETHERNET = "ethernet"
+        NONE = "none"
+        WIFI = "wifi"
+    end enum
+
+end namespace

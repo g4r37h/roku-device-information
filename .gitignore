@@ -1,4 +1,13 @@
-_build/
-.DS_Store
 .env
+.DS_Store
+.out/
+
+bsconfig.rooibos.json
+_build/
+_dist/
+build/
+dist/
+node_modules/
 out/
+tests/.tempOutput.log
+tests/output.log

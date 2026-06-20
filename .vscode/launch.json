@@ -1,17 +1,15 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "consoleOutput": "normal",
             "enableDebuggerAutoRecovery": true,
+            "enableDebugProtocol": true,
             "envFile": "${workspaceFolder}/.env",
-            "host": "${env:ROKU_DEV_TARGET}",
-            "name": "Debug (Default)",
-            "password": "${env:ROKU_DEV_PASSWORD}",
-            "preLaunchTask": "Build",
+            "host": "${env:DEVELOPMENT_ROKU_IP_1}",
+            "name": "Build Production (IP #1)",
+            "password": "${env:DEVELOPMENT_ROKU_PASSWORD}",
+            "preLaunchTask": "Build Production",
             "request": "launch",
             "stopDebuggerOnAppExit": true,
             "stopOnEntry": false,
@@ -21,7 +19,7 @@
                 "*.*",
                 "**/*.*"
             ],
-            "rootDir": "${workspaceFolder}/_build",
+            "rootDir": "${workspaceFolder}/build",
             "sourceDirs": [
                 "${workspaceFolder}/"
             ]

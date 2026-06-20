@@ -1,0 +1,159 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+sub init()
+    m.leftBody = m.top.findNode("leftBody")
+    m.rightBody = m.top.findNode("rightBody")
+
+    m.timer = m.top.findNode("updateTimer")
+    m.timer.observeField("fire", "_updateInfo")
+    m.timer.duration = 0.1
+    m.timer.control = "start"
+end sub
+
+function _addField(name as string, value as string) as string
+    return name + ": " + value + chr(10)
+end function
+
+sub _updateInfo()
+    m.timer.control = "stop"
+    m.timer.duration = 5
+    m.timer.control = "start"
+
+    m.leftBody.text = _getLeftBody()
+    m.rightBody.text = _getRightBody()
+end sub
+
+function _getLeftBody() as string
+    text = ""
+
+    text += _addField("Model Display Name", Util.Device.getModelDisplayName())
+    text += _addField("Model Number", Util.Device.getModel(true))
+    text += _addField("Model Type", Util.Device.getModelType())
+    text += _addField("Firmware", Util.Device.getOsVersion(4))
+    text += _addField("Graphics Platform", ucase(Util.Device.getGraphicsPlatform()))
+
+    uiResolution = Util.Device.getUIResolution()
+    text += _addField("Resolution", uiResolution.name + " | " + uiResolution.width.toStr() + " x " + uiResolution.height.toStr())
+
+    text += chr(10)
+
+    text += _addField("App Name", Util.App.getName())
+    text += _addField("App Version", Util.App.getVersion(true))
+
+    text += chr(10)
+
+    text += _addField("General Memory Level", Util.Device.getGeneralMemoryLevel())
+
+    memoryMonitor = createObject("roAppMemoryMonitor")
+    if memoryMonitor <> invalid
+        memoryLimits = memoryMonitor.getChannelMemoryLimit()
+        if memoryLimits <> invalid
+            availableMemory = memoryLimits.maxForegroundMemory
+            usedMemory = availableMemory - memoryMonitor.getChannelAvailableMemory()
+            text += _addField("Memory Usage", substitute("{0} / {1} ({2}%)", Util.Data.kilobytesAsFormattedUnits(usedMemory).combined[0], Util.Data.kilobytesAsFormattedUnits(availableMemory).combined[0], Util.Math.toDecimalPlaces((Util.Math.safeDivide(usedMemory, availableMemory) ?? 0) * 100).toStr()))
+            text += _addField("Max Available Background Memory", Util.Data.kilobytesAsFormattedUnits(memoryLimits.maxBackgroundMemory).combined[0])
+            text += _addField("Max Available Heap Memory", Util.Data.kilobytesAsFormattedUnits(memoryLimits.maxRokuManagedHeapMemory).combined[0])
+        end if
+    end if
+
+    text += chr(10)
+
+    text += _addField("Available Registry Space", Util.Data.bytesAsFormattedUnits(createObject("roRegistry").getSpaceAvailable()).combined[0])
+
+    text += chr(10)
+
+    text += _addField("System Uptime", Util.Time.secondsAsFormattedUnits(int(upTime(-1)), true, true, true, true).combined.join(", "))
+
+    text += chr(10)
+
+    adsEnabled = Util.App.getManifestValue("ads_enabled")
+    if adsEnabled <> "" then text += _addField("Advertisements", (adsEnabled = "true" ? "Enabled" : "Disabled"))
+
+    adsLoggingEnabled = Util.App.getManifestValue("ads_logging_enabled")
+    if adsLoggingEnabled <> "" then text += _addField("Advertisement Logging", (adsLoggingEnabled = "true" ? "Enabled" : "Disabled"))
+
+    adsTestModeEnabled = Util.App.getManifestValue("ads_test_mode_enabled")
+    if adsTestModeEnabled <> "" then text += _addField("Advertisement Test Mode", (adsTestModeEnabled = "true" ? "Enabled" : "Disabled"))
+
+    analyticsEnabled = Util.App.getManifestValue("analytics_enabled")
+    if analyticsEnabled <> "" then text += _addField("Analytics", (analyticsEnabled = "true" ? "Enabled" : "Disabled"))
+
+    analyticsLoggingEnabled = Util.App.getManifestValue("analytics_logging_enabled")
+    if analyticsLoggingEnabled <> "" then text += _addField("Analytics Logging", (analyticsLoggingEnabled = "true" ? "Enabled" : "Disabled"))
+
+    appLoggingEnabled = Util.App.getManifestValue("app_logging_enabled")
+    if appLoggingEnabled <> "" then text += _addField("Logging", (appLoggingEnabled = "true" ? "Enabled" : "Disabled"))
+
+    isLowMemoryHardwareOverride = Util.App.getManifestValue("override_is_low_memory_hardware")
+    if isLowMemoryHardwareOverride <> "" then text += _addField("Is Low Memory Device Override", (isLowMemoryHardwareOverride = "true" ? "Yes" : "No"))
+
+    openGlSupportOverride = Util.App.getManifestValue("override_supports_opengl")
+    if openGlSupportOverride <> "" then text += _addField("OpenGL Support Override", (openGlSupportOverride = "true" ? "Enabled" : "Disabled"))
+
+    return text
+end function
+
+function _getRightBody() as string
+    text = ""
+
+    raleEnabled = Util.App.getManifestValue("rale_enabled")
+    if raleEnabled <> ""
+        text += _addField("RALE Support", (raleEnabled = "true" ? "Enabled" : "Disabled"))
+        text += chr(10)
+    end if
+
+    connectionInfo = Util.Device.getConnectionInfo()
+    if connectionInfo.isEthernet or connectionInfo.isWifi
+        text += _addField("Network Connection Name", connectionInfo.name)
+        text += _addField("Network Connection Type", connectionInfo.type + (function(connectionInfo as object) as string
+            if connectionInfo.isWifi then return ` (${connectionInfo.ssid})`
+            return ""
+        end function)(connectionInfo))
+        text += _addField("IP Address", `(LAN: ${connectionInfo.lanIp}, WAN: ${connectionInfo.wanIp})`)
+    else
+        text += _addField("Network Connection Type", "Not Connected")
+    end if
+
+    text += chr(10)
+
+    text += _addField("User Country Code", Util.Device.getUserCountryCode())
+    text += _addField("Channel Country Code", Util.Device.getChannelCountryCode())
+    text += _addField("Locale", Util.Device.getLocale())
+    text += _addField("Time Zone", Util.Device.getTimeZone())
+
+    text += chr(10)
+
+    text += _addField("Closed Captions", (Util.Device.isCaptionsEnabled() ? "Enabled" : "Disabled"))
+    text += _addField("Closed Captions Mode", Util.Device.getCaptionsOption("mode"))
+    text += _addField("Preferred Closed Captions Language", Util.Device.getPreferredCaptionLanguage())
+
+    text += chr(10)
+
+    text += _addField("Tracking via Roku ID for Advertisers (RIDA)", (Util.Device.isRidaEnabled() ? "Enabled" : "Disabled"))
+    text += _addField("RIDA ID", Util.Device.getRida())
+
+    text += chr(10)
+
+    drmInfo = Util.Device.getDrmInfoEx()
+    if drmInfo.playReady <> invalid
+        text += _addField("PlayReady", "Enabled")
+        text += _addField("PlayReady Version", Util.String.getVersion(drmInfo.playReady.version))
+        text += _addField("PlayReady TEE Support", drmInfo.playReady.tee.toStr())
+    else
+        text += _addField("PlayReady", "Disabled")
+    end if
+    if drmInfo.widevine <> invalid
+        text += _addField("Widevine", "Enabled")
+        text += _addField("Widevine Version", Util.String.getVersion(drmInfo.widevine.version))
+        text += _addField("Widevine TEE Support", drmInfo.widevine.tee.toStr())
+    else
+        text += _addField("Widevine", "Disabled")
+    end if
+
+    text += chr(10)
+
+    bitmovinLicence = Util.App.getManifestValue("bitmovin_player_license_key")
+    if bitmovinLicence <> "" then text += _addField("Bitmovin Licence Key", bitmovinLicence)
+
+    return text
+end function

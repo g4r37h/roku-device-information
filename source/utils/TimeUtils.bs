@@ -1,0 +1,109 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+namespace Util.Time
+
+    const YEARS_KEY = "years"
+    const WEEKS_KEY = "weeks"
+    const DAYS_KEY = "days"
+    const HOURS_KEY = "hours"
+    const MINUTES_KEY = "minutes"
+    const SECONDS_KEY = "seconds"
+
+    function secondsAsFormattedUnits(seconds as double, mins as boolean, hours as boolean, days as boolean, weeks = false as boolean, years = false as boolean, strings = invalid as object, significantUnits = -1 as integer, omitEmpty = true as boolean, short = false as boolean) as object
+        timeUnits = Util.Time.secondsAsUnits(seconds, days, hours, mins, weeks, years)
+
+        defaultStrings = {}
+        defaultStrings[YEARS_KEY] = { "short": "y", "single": "year", "plural": "years" }
+        defaultStrings[WEEKS_KEY] = { "short": "w", "single": "week", "plural": "weeks" }
+        defaultStrings[DAYS_KEY] = { "short": "d", "single": "day", "plural": "days" }
+        defaultStrings[HOURS_KEY] = { "short": "h", "single": "hour", "plural": "hours" }
+        defaultStrings[MINUTES_KEY] = { "short": "m", "single": "minute", "plural": "minutes" }
+        defaultStrings[SECONDS_KEY] = { "short": "s", "single": "second", "plural": "seconds" }
+
+        unitStrings = {}
+        for each unit in defaultStrings.items()
+            unitStrings[unit.key] = ((strings.doesExist?(unit.key) ?? false) ? strings[unit.key] : unit.value)
+        end for
+
+        unitOrder = [YEARS_KEY, WEEKS_KEY, DAYS_KEY, HOURS_KEY, MINUTES_KEY, SECONDS_KEY]
+
+        combined = []
+        units = {}
+
+        significantCount = 0
+        for each unitKey in unitOrder
+            if timeUnits.doesExist(unitKey)
+                value = abs(timeUnits[unitKey])
+                strings = unitStrings[unitKey]
+
+                if (value > 0 or not omitEmpty) and (significantUnits = -1 or significantCount < significantUnits) or (unitKey = SECONDS_KEY and significantCount = 0)
+                    timeStr = `${value} ${(short ? strings.short : (value = 1.0 ? strings.single : strings.plural))}`
+
+                    if timeStr <> ""
+                        significantCount += 1
+                        units[unitKey] = timeStr
+                        combined.push(timeStr)
+                    end if
+                end if
+            end if
+        end for
+
+        return {
+            "polarity": seconds >= 0
+            "combined": combined
+            "units": units
+        }
+    end function
+
+    function secondsAsUnits(seconds as double, days = false as boolean, hours = true as boolean, mins = true as boolean, weeks = false as boolean, years = false as boolean) as object
+        if years then return (function(seconds as double) as object
+            result = {}
+            result[YEARS_KEY] = seconds \ 31536000
+            result[WEEKS_KEY] = (seconds mod 31536000) \ 604800
+            result[DAYS_KEY] = ((seconds mod 31536000) mod 604800) \ 86400
+            result[HOURS_KEY] = (seconds mod 86400) \ 3600
+            result[MINUTES_KEY] = (seconds mod 3600) \ 60
+            result[SECONDS_KEY] = seconds mod 60
+            return result
+        end function)(seconds)
+
+        if weeks then return (function(seconds as double) as object
+            result = {}
+            result[WEEKS_KEY] = seconds \ 604800
+            result[DAYS_KEY] = (seconds mod 604800) \ 86400
+            result[HOURS_KEY] = (seconds mod 86400) \ 3600
+            result[MINUTES_KEY] = (seconds mod 3600) \ 60
+            result[SECONDS_KEY] = seconds mod 60
+            return result
+        end function)(seconds)
+
+        if days then return (function(seconds as double) as object
+            result = {}
+            result[DAYS_KEY] = seconds \ 86400
+            result[HOURS_KEY] = (seconds mod 86400) \ 3600
+            result[MINUTES_KEY] = (seconds mod 3600) \ 60
+            result[SECONDS_KEY] = seconds mod 60
+            return result
+        end function)(seconds)
+
+        if hours then return (function(seconds as double) as object
+            result = {}
+            result[HOURS_KEY] = seconds \ 3600
+            result[MINUTES_KEY] = (seconds mod 3600) \ 60
+            result[SECONDS_KEY] = seconds mod 60
+            return result
+        end function)(seconds)
+
+        if mins then return (function(seconds as double) as object
+            result = {}
+            result[MINUTES_KEY] = seconds \ 60
+            result[SECONDS_KEY] = seconds mod 60
+            return result
+        end function)(seconds)
+
+        result = {}
+        result[SECONDS_KEY] = seconds
+        return result
+    end function
+
+end namespace

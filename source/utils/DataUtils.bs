@@ -1,0 +1,76 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+import "pkg:/source/utils/TypeUtils.bs"
+
+namespace Util.Data
+
+    function bytesAsFormattedUnits(bytes as float, kb = true as boolean, mb = true as boolean, gb = false as boolean, suffixMap = invalid as object, omitEmpty = true as boolean) as object
+        if not isObject(suffixMap) then suffixMap = {
+            "gb": "GB"
+            "mb": "MB"
+            "kb": "KB"
+            "bytes": "B"
+        }
+
+        byteUnits = Util.Data.bytesAsUnits(bytes, kb, mb, gb)
+        unitOrder = ["gb", "mb", "kb", "bytes"]
+
+        combined = []
+        units = {}
+
+        for each unitKey in unitOrder
+            if byteUnits.doesExist(unitKey)
+                value = byteUnits[unitKey]
+                if value <> 0 or not omitEmpty
+                    timeStr = `${value}${suffixMap[unitKey]}`
+                    units[unitKey] = timeStr
+                    combined.push(timeStr)
+                end if
+            end if
+        end for
+
+        return {
+            "combined": combined
+            "units": units
+        }
+    end function
+
+    function bytesAsUnits(bytes as float, kb = true as boolean, mb = true as boolean, gb = false as boolean) as object
+        if gb
+            gbCount = int(bytes / 1073741824.0)
+            left = bytes - gbCount * 1073741824.0
+            mbCount = int(left / 1048576.0)
+            left = left - mbCount * 1048576.0
+            kbCount = int(left / 1024.0)
+            return {
+                "gb": gbCount
+                "mb": mbCount
+                "kb": kbCount
+                "bytes": int(left - kbCount * 1024.0)
+            }
+        end if
+        if mb
+            mbCount = int(bytes / 1048576.0)
+            left = bytes - mbCount * 1048576.0
+            kbCount = int(left / 1024.0)
+            return {
+                "mb": mbCount
+                "kb": kbCount
+                "bytes": int(left - kbCount * 1024.0)
+            }
+        end if
+        if kb
+            kbCount = int(bytes / 1024.0)
+            return {
+                "kb": kbCount
+                "bytes": int(bytes - kbCount * 1024.0)
+            }
+        end if
+        return { "bytes": int(bytes) }
+    end function
+
+    function kilobytesAsFormattedUnits(kilobytes as float, kb = true as boolean, mb = true as boolean, gb = false as boolean, suffixMap = invalid as object, omitEmpty = true as boolean) as object
+        return Util.Data.bytesAsFormattedUnits(kilobytes * 1024.0, kb, mb, gb, suffixMap, omitEmpty)
+    end function
+
+end namespace

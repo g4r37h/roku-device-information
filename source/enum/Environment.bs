@@ -1,0 +1,16 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+namespace Environment
+
+    namespace Name
+        const INTEGRATION = "int"
+        const PRODUCTION = "prod"
+        const STAGING = "stage"
+        const TEST = "test"
+    end namespace
+
+    namespace BaseUrlName
+        const MAIN = "main"
+    end namespace
+
+end namespace

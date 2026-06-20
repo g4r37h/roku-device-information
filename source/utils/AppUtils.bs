@@ -1,0 +1,31 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+import "pkg:/source/utils/ConfigModelUtils.bs"
+import "pkg:/source/utils/ValueUtils.bs"
+
+namespace Util.App
+
+    function getName() as string
+        title = createObject("roAppInfo").getValue("title")
+        return (title <> "" ? title : Util.ConfigModel.getString("app.name"))
+    end function
+
+    function getVersion(includeRepoHash = false as boolean) as string
+        appInfo = createObject("roAppInfo")
+
+        if includeRepoHash
+            return substitute("{0}.{1}.{2}.{3}", Util.Value.getValue(appInfo.getValue("major_version"), "0"), Util.Value.getValue(appInfo.getValue("minor_version"), "0"), Util.Value.getValue(appInfo.getValue("build_version"), "0"), Util.Value.getValue(appInfo.getValue("build_repo_hash"), "0").left(9))
+        end if
+
+        return substitute("{0}.{1}.{2}", Util.Value.getValue(appInfo.getValue("major_version"), "0"), Util.Value.getValue(appInfo.getValue("minor_version"), "0"), Util.Value.getValue(appInfo.getValue("build_version"), "0"))
+    end function
+
+    function getGlobal() as object
+        return (m.global ?? m.screen.getGlobalNode?())
+    end function
+
+    function getManifestValue(id as string, default = "" as string) as string
+        return Util.Value.getValue(createObject("roAppInfo").getValue(id), default)
+    end function
+
+end namespace

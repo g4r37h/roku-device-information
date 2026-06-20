@@ -1,0 +1,3 @@
+sub init()
+    m.top.appendChild(createObject("roSGNode", "DebugPanel"))
+end sub

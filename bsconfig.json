@@ -1,0 +1,23 @@
+{
+    "out": "out/roku-deploy.zip",
+    "sourceMap": true,
+    "stagingDir": "build",
+    "retainStagingDir": true,
+    "createPackage": false,
+    "watch": false,
+    "lintConfig": "bslint.json",
+    "diagnosticFilters": [
+        "components/bs-render-thread-app-components/debug/TrackerTask.xml"
+    ],
+    "files": [
+        "./manifest",
+        "assets/**/*",
+        "components/**/*",
+        "source/**/*",
+        "resources/**/*"
+    ],
+    "plugins": [
+        "./scripts/linting/ncoParenthesesLinter.js",
+        "@rokucommunity/bslint"
+    ]
+}

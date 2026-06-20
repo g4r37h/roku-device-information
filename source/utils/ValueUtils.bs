@@ -1,0 +1,13 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+namespace Util.Value
+
+    function getValue(value as dynamic, default as dynamic, treatDefaultAsInvalid = true as boolean) as dynamic
+        if treatDefaultAsInvalid
+            if isString(value) then return value <> "" ? value : default
+            if isNumber(value) then return value <> 0 ? value : default
+        end if
+        return value <> invalid ? value : default
+    end function
+
+end namespace

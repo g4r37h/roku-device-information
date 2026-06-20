@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component name="DebugPanel" extends="Group">
+    <children>
+        <Rectangle id="background" width="1920" height="1080" color="#000000FF" />
+        <LayoutGroup id="bodyLayout" translation="[960, 540]" layoutDirection="horiz" horizAlignment="center" vertAlignment="center">
+            <Label id="leftBody" font="font:TinySystemFont" wrap="true" width="900" height="960" ellipsisText="..." ellipsizeOnBoundary="true" lineSpacing="4" />
+            <Label id="rightBody" font="font:TinySystemFont" wrap="true" width="900" height="960" ellipsisText="..." ellipsizeOnBoundary="true" lineSpacing="4" />
+        </LayoutGroup>
+
+        <Timer id="updateTimer" repeat="true" duration="5" />
+    </children>
+
+    <script type="text/brightscript" uri="./DebugPanel.bs" />
+    <script type="text/brightscript" uri="pkg:/source/enum/Environment.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/AppUtils.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/DataUtils.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/DeviceUtils.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/StringUtils.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/TimeUtils.bs" />
+    <script type="text/brightscript" uri="pkg:/source/utils/MathUtils.bs" />
+</component>

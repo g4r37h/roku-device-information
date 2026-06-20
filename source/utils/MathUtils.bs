@@ -1,0 +1,16 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+namespace Util.Math
+
+    function safeDivide(dividend as dynamic, divisor as dynamic) as dynamic
+        if not isNumber(dividend) or not isNumber(divisor) or divisor = 0 then return invalid
+        return dividend / divisor
+    end function
+
+    function toDecimalPlaces(value as dynamic, places = 1 as integer) as dynamic
+        if not isNumber(value) or places < 0 then return invalid
+        multiplier = 10 ^ places
+        return int(value * multiplier + 0.5) / multiplier
+    end function
+
+end namespace

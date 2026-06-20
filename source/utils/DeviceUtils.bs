@@ -1,0 +1,120 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+import "pkg:/source/enum/Network.bs"
+import "pkg:/source/utils/TypeUtils.bs"
+import "pkg:/source/utils/ValueUtils.bs"
+
+namespace Util.Device
+
+    function getCaptionsOption(option as string) as string
+        return createObject("roDeviceInfo").getCaptionsOption(option)
+    end function
+
+    function getConnectionInfo() as object
+        di = createObject("roDeviceInfo")
+        connectionInfo = di.getConnectionInfo()
+
+        result = {
+            "type": ({
+                "WiFiConnection": Network.Adapter.WIFI
+                "WiredConnection": Network.Adapter.ETHERNET
+            }[connectionInfo.type] ?? Network.Adapter.NONE)
+        }
+
+        result.append({
+            "isEthernet": result.type = Network.Adapter.ETHERNET
+            "isWifi": result.type = Network.Adapter.WIFI
+        })
+
+        if not result.isEthernet and not result.isWifi
+            result.append({
+                "lanIp": Network.Adapter.NONE
+                "name": Network.Adapter.NONE
+                "wanIp": Network.Adapter.NONE
+            })
+        else
+            wanIp = di.getExternalIp()
+            result.append({
+                "lanIp": (isIpAddress(connectionInfo.ip) ? connectionInfo.ip : Network.Adapter.NONE)
+                "name": connectionInfo.name
+                "wanIp": (isIpAddress(wanIp) ? wanIp : Network.Adapter.NONE)
+            })
+
+            if result.isWifi then result["ssid"] = connectionInfo.ssid
+        end if
+
+        return result
+    end function
+
+    function getChannelCountryCode() as string
+        return createObject("roDeviceInfo").getCountryCode()
+    end function
+
+    function getDrmInfoEx() as object
+        return createObject("roDeviceInfo").getDrmInfoEx()
+    end function
+
+    function getGeneralMemoryLevel() as string
+        return createObject("roDeviceInfo").getGeneralMemoryLevel()
+    end function
+
+    function getGraphicsPlatform() as object
+        return createObject("roDeviceInfo").getGraphicsPlatform()
+    end function
+
+    function getLocale() as string
+        return createObject("roDeviceInfo").getCurrentLocale()
+    end function
+
+    function getPreferredCaptionLanguage() as string
+        return createObject("roDeviceInfo").getPreferredCaptionLanguage()
+    end function
+
+    ' Alphanumeric string i.e. "3050X" if `long` is true, or "3050" if false.
+    function getModel(long = true as boolean) as string
+        if long then return createObject("roDeviceInfo").getModel().split("-")[0].trim()
+
+        match = createObject("roRegEx", "([A-Z]|[0-9])[0-9][0-9][0-9][0-9]?", "").match(createObject("roDeviceInfo").getModel())
+        return (match.count() > 0 ? match[0] : "")
+    end function
+
+    function getModelType() as string
+        return Util.Value.getValue(createObject("roDeviceInfo").getModelType(), "STB")
+    end function
+
+    function getModelDisplayName() as string
+        return createObject("roDeviceInfo").getModelDisplayName()
+    end function
+
+    function getOsVersion(level = 3 as integer) as string
+        version = createObject("roDeviceInfo").getOsVersion()
+        if level > 3 then return `${version.major}.${version.minor}.${version.revision}.${version.build}`
+        if level > 2 then return `${version.major}.${version.minor}.${version.revision}`
+        return `${version.major}.${version.minor}`
+    end function
+
+    function getRida() as string
+        return createObject("roDeviceInfo").getRida()
+    end function
+
+    function getTimeZone() as string
+        return createObject("roDeviceInfo").getTimeZone()
+    end function
+
+    function getUIResolution() as object
+        return createObject("roDeviceInfo").getUIResolution()
+    end function
+
+    function getUserCountryCode() as string
+        return createObject("roDeviceInfo").getUserCountryCode()
+    end function
+
+    function isCaptionsEnabled() as boolean
+        return lcase(createObject("roDeviceInfo").getCaptionsMode()) = "on"
+    end function
+
+    function isRidaEnabled() as boolean
+        return not createObject("roDeviceInfo").isRidaDisabled()
+    end function
+
+end namespace

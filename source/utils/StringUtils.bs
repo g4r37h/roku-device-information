@@ -1,0 +1,11 @@
+' © 2025 Gareth Jones (www.gareth.co.uk). All rights reserved.
+
+namespace Util.String
+
+    function getVersion(value as string) as string
+        if value = "" then return ""
+        matches = createObject("roRegex", "\d{1,5}(\.\d{1,5}){0,3}", "").match(value)
+        return matches.count() = 0 ? "" : matches[0]
+    end function
+
+end namespace
